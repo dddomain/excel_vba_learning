@@ -40,7 +40,7 @@ Private Sub btnAdd_Click()
     If chkDeliv.Value Then
         Range("I" & MaxRow).Value = "済"
     Else
-        Range("I" & MaxRow).Value = ""
+         Range("I" & MaxRow).Value = ""
     End If
     
     
@@ -48,14 +48,14 @@ Private Sub btnAdd_Click()
     If chkInv.Value Then
         Range("J" & MaxRow).Value = "済"
     Else
-        Range("J" & MaxRow).Value = ""
+         Range("J" & MaxRow).Value = ""
     End If
     
     '入金
     If chkPay.Value Then
         Range("K" & MaxRow).Value = "済"
     Else
-        Range("K" & MaxRow).Value = ""
+         Range("K" & MaxRow).Value = ""
     End If
     
     'フォーカスを最初に戻す
@@ -77,23 +77,42 @@ Private Sub calcTotal()
         '単価×数量の値を金額のテキストボックスに代入する
         txtTotal.Value = txtPrice.Value * txtNum.Value
     Else
-        txtTotal.Value = ""
+         txtTotal.Value = ""
     End If
 
 End Sub
 
 Private Sub txtNum_Change()
 
-    'txtPrice_Change()の内容と同様
-    Call calcTotal
+     'txtPrice_Change()の内容と同様
+     Call calcTotal
 
 End Sub
 
 Private Sub txtPrice_Change()
 
-    'txtNum_Change()の内容と同様
-    Call calcTotal
+     'txtNum_Change()の内容と同様
+     Call calcTotal
 
+End Sub
+
+Private Sub txtProdId_Change()
+    '商品リストの最終行を取得
+    Dim ProdMaxRow As Integer
+    ProdMaxRow = Worksheets("リスト").Cells(Rows.Count, 3).End(xlUp).Row
+
+    '商品IDを入力したら、自動的にそれに紐づいた商品名がテキストボックスに挿入されるようにする
+    
+    'try
+    On Error GoTo vlookError
+        txtProdName.Value = _
+        WorksheetFunction.VLookup(CInt(txtProdId.Value), Worksheets("リスト").Range("C3:E" & ProdMaxRow), 2, False)
+    Exit Sub
+    
+    'catch
+vlookError:
+    txtProdId.Value = ""
+    
 End Sub
 
 Private Sub UserForm_Initialize()
